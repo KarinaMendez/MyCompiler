@@ -3,16 +3,26 @@ import java.io.*;
 import compiler.lib.*;
 import compiler.scanner.Scanner;
 
-import compiler.ast.Ast;
+import compiler.lib.Printer;
+
+//imports para AST
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.*;
+
+import compiler.scanner.DecafScanner;
+import compiler.parser.DecafParser;
+import compiler.ast.*;
+
+
 import compiler.semantic.Semantic;
 import compiler.irt.Irt;
 import compiler.codegen.Codegen;
 import compiler.parser.CC4Parser;
 
-public class Compiler{
+public class Compiler{ //extends DecafParserBaseListener{
 	public static void main(String[] args) throws Exception{
 		if (args.length>0){
-			//if(args[ )
+			
 			String filename = args[args.length-1];
 			String fileout="Copy"+filename;
 
@@ -130,7 +140,11 @@ public class Compiler{
 				if(options.size()>= 2)
 				switch(options.get(options.size()-2)){
 					case "-target":
-						System.out.println("se procedera hasta: " + options.get(j));
+						/*Printing the process
+
+						out.print("\nse procedera hasta: " + options.get(j) + "\n");
+
+						end of printing the process*/
 						switch(options.get(j)){
 									case "scan":
 										try{
@@ -156,8 +170,20 @@ public class Compiler{
 										} catch (FileNotFoundException p) {
 								    		ErrorHandler error = new ErrorHandler("not existing file");
 										}
+
 										Printer outas = new Printer(fileout, "flag");
-										Ast a = new Ast(outas,filename);
+
+										DecafScanner scanner = new DecafScanner(new ANTLRFileStream(filename));
+      									DecafParser parser = new DecafParser(new CommonTokenStream(scanner));
+										
+										ParseTree tree = parser.start();
+										System.out.println(tree.toStringTree(parser));
+
+										Ast visitor = new Ast(outas,filename);
+										Root root = (Root)visitor.visit(tree);
+										
+										root.print();
+
 										break; 
 									case "semantic":
 										try{
@@ -212,4 +238,9 @@ public class Compiler{
 			System.exit(0);
 		}
 	}
+
+	/*@Override 
+	public void visitErrorNode(ErrorNode node) { 
+		System.out.println(node.getText());
+	}*/
 }

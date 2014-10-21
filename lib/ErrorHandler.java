@@ -21,9 +21,9 @@ public class ErrorHandler{
 			case "no argument for -opt":
 				System.err.println("error falta el argumento que complementa a -opt");
 				break;
-			default:
+			/*default:
 				System.err.println("Error");
-				break;
+				break;*/
 		}
 	}
 }

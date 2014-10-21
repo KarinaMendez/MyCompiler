@@ -6,8 +6,18 @@ options {
 
 @parser::header{
   package compiler.parser;
-  import compiler.lib.Printer;
+  import java.util.*;
 }
+
+@parser::members{
+	public LinkedList<String> list = new LinkedList<String>();
+
+  	public LinkedList<String> getlist(){
+  		return list;
+  	}  	 
+
+}
+
 
 
 
@@ -17,88 +27,81 @@ options {
  *------------------------------------------------------------------*/
 
 
-start: (program | callout_decl | field_decl | method_decl | block | type | statement);
+start: program {list.add("start");};
 
-program: (callout_decl)* (field_decl)* (method_decl)*;
+program: (callout_decl* field_decl* method_decl*){list.add("program");};											 
 
-callout_decl: CALLOUT (id) PUNTOYCOMA;
+//ready
+callout_decl: (CALLOUT (ID) SEMICOLON){list.add("callout_decl");}													 # calloutDec; 
+  
+field_decl: ((INT | BOO | VOID) (((ID) 
+				   | ((ID) (BRAKET (int_literal) BRAKET2)) COMA*)+ 
+				   | ((ID) (BRAKET (int_literal) BRAKET2))) SEMICOLON){list.add("field_decl");} 					 #fieldDec1;
 
-field_decl: (type) ((id) | ((id) (BRAKET (int_literal) BRAKET2)) + COMA SEMICOLON);
 
-method_decl: ((type) | VOID) (id) PARENTESIS (( (type)(id) )+ COMA) PARENTESIS2 (block);
+method_decl: ((INT | BOO | VOID) ID PARENTESIS (INT | BOO ID  (COMA INT | BOO ID)*)? PARENTESIS2 block){list.add("method_decl");} 	 # methodDec;
 
-block: BRACE (field_decl)* (statement)* BRACE2;
+block: BRACE (field_decl)* (statement)* BRACE2{list.add("block");}													# block1; 
 
-type: INT | BOO;
+statement: (location assign_op expr SEMICOLON) 																	    # locationSon
+	| (method_call SEMICOLON) 																						# methodCall
+	| (IF PARENTESIS expr PARENTESIS2 block (ELSE (block))*)														# if
+	| (FOR PARENTESIS* ID EQ expr COMA expr PARENTESIS2* block)  													# for
+	| (WHILE PARENTESIS expr PARENTESIS block) 																		# while 
+	| (RETURN expr SEMICOLON) 																						# return
+	| (BREAK SEMICOLON)																								# break
+	| (CONTINUE SEMICOLON)/*){list.add("statement");}*/ 					    									# continue;
 
-statement: ((location)(assign_op)(expr) PUNTOYCOMA) 
-	| (method_call) 
-	| (IF  BRACE (expr) BRACE2  (block) (ELSE (block)) PUNTOYCOMA) 
-	| (FOR PARENTESIS (id) EQ (expr) COMA (expr) PARENTESIS2 (block) PUNTOYCOMA) 
-	| (WHILE PARENTESIS (expr) PARENTESIS (block) PUNTOYCOMA) 
-	| (RETURN BRAKET (expr) BRAKET2 PUNTOYCOMA) 
-	| (CONTINUE PUNTOYCOMA);		
+assign_op: (EQ | PLEQ | MIEQ){list.add("assign_op");}																# assign;
 
-assign_op: EQ | PLEQ | MIEQ;
+method_call: (ID PARENTESIS expr* (COMA expr)* PARENTESIS2) 														# methodC1
+	| (ID PARENTESIS ((callout_arg)* COMA) PARENTESIS2)/*){list.add("method_call");}*/								# methodC2;
 
-method_call: (method_name) PARENTESIS ((expr)+ COMA) PARENTESIS2 
-	| (method_name) PARENTESIS ((callout_arg)+ COMA) PARENTESIS2;
+location: (ID | (ID PARENTESIS expr PARENTESIS2) | (ID BRAKET expr BRAKET2)){list.add("location");}					# locationParent;
 
-method_name: (id);
-
-location: (id) | (id) BRAKET (expr) BRAKET2;
-
-expr: (location) 
-	| (method_call) 
-	| (literal) 
-	| (expleft)(bin_op)(expr) 
-	| SUB (expr) 
-	| NO (expr) 
-	| PARENTESIS (expr) PARENTESIS;
+expr: ((SUB | NO) expr)   																							# negativeExp1
+	| (PARENTESIS expr PARENTESIS)																					# exp1															
+	| (expleft bin_op expr)  																						# recursiveExp																						
+	| literal  																										# literalExp1
+	| location  																								    # locationExp1
+	| method_call /*) {list.add("expr");}*/																			# methodCallExp1;																		
 
 expleft: 
-	(location) 
-	| (method_call) 
-	| (literal) 
-	| SUB (expr) 
-	| NO (expr) 
-	| PARENTESIS (expr) PARENTESIS;
+	location 																										# locationExp2
+	| method_call 																									# methodCallExp2
+	| literal 																										# literalExp2
+	| ((SUB | NO) expr)  																							# negativeExp2
+	| (PARENTESIS expr PARENTESIS)/*){list.add("expleft");}*/														# exp2;
 
-callout_arg: (expr) | (string_literal);
+callout_arg: (expr | STRING){list.add("callout_arg");}																# calloutArg;
 
-bin_op: (arith_op) | (rel_op) | (eq_op) | (cond_op);
+bin_op: (arith_op | rel_op | eq_op | cond_op){list.add("bin_op");}  												# binOp;
 
-arith_op: PLUS | SUB | MULT | DIV | PER;
+add_sub: (PLUS | SUB);
 
-rel_op: MEN | MAY | MEEQ | MAEQ;
+mult_div: (MULT | DIV);
 
-eq_op: EQQ | NOEQ;
+//ready
+arith_op: (mult_div | add_sub){list.add("arith_op");} 																# arithOp;
 
-cond_op: ANDD | ORR;
+//ready
+rel_op: (MEN | MAY | MEEQ | MAEQ){list.add("rel_op");}	 															# relOp;
 
-literal: (int_literal) | (char_literal) | (bool_literal);
+//ready
+eq_op: (EQQ | NOEQ){list.add("eq_op");} 																			# eqOp;
 
-id: (alpha) (alpha_num)*;
+//ready
+cond_op: (ANDD | ORR){list.add("cond_op");} 																		# condOp;
 
-alpha_num: (alpha) | (digit);
+//ready
+literal: (int_literal | CHAR | BOOLEANS){list.add("literal");}	 													# lit;
 
-alpha: ALPHA;
+//ready
+int_literal: (decimal_literal | HEX){list.add("int_literal");}	 													# intLit;
 
-digit: ENTEROS;
+//ready
+decimal_literal: (ENTEROS (ENTEROS)*){list.add("decimal_literal");} 												# decimalLit;
 
-hex_digit: digit | AF; 
-
-int_literal: (decimal_literal) | (hex_literal);
-
-decimal_literal: (digit) (digit)*;
-
-hex_literal: HEX;
-
-bool_literal: BOOLEANS;
-
-char_literal: CHAR;
-
-string_literal: STRING; 
 
 
 

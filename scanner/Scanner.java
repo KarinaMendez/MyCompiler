@@ -7,12 +7,16 @@ import compiler.lib.Printer;
 
 import compiler.scanner.DecafScanner;
 
+
 public class Scanner{
+	private DecafScanner scann;
 	public Scanner(Printer out,String filename)throws Exception{
-		out.print("stage: Scanning \n");
+		out.print("\nstage: Scanning \n");
 		try{
-		    DecafScanner lexer = new DecafScanner(new ANTLRFileStream(filename));
-		    while (lexer.nextToken().getType() != Token.EOF);
+		    this.scann = new DecafScanner(new ANTLRFileStream(filename));
+		    Token t;
+		    while ((t = scann.nextToken()).getType() != Token.EOF) out.print(DecafScanner.ruleNames[t.getType()-1]+"\n");
+		    System.out.print("\n");
 		}catch(ArrayIndexOutOfBoundsException aiobe){
 		    System.err.println("Must provide a valid path to the filename with the tokens");
 		    System.exit(1);
@@ -20,6 +24,9 @@ public class Scanner{
 		    System.err.println("Must provide a valid path to the filename with the tokens");
 		    System.exit(1);
 		}
-		out.close();
+		//out.close();
+	}
+	public DecafScanner getScanner(){
+		return this.scann;
 	}
 }

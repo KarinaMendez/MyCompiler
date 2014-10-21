@@ -1,0 +1,3 @@
+// Invalid backslashed character.
+'\p'
+'a'

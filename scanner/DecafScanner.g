@@ -4,11 +4,21 @@ lexer grammar DecafScanner;
 	package compiler.scanner;
 }
 
-
+PERIOD: ('.');
+FF: ('');
+QUEST: ('?');
+WSS : 	('\' \'');
+NLS : ('\'\\n\'');
+TABS : ('\'\\t\'');
+RETS : ('\'\\r\'');
+DIAGS: ('\\');
+COSIMPLE: ('\'');
+CODOBLE : ('\'\\\"\'');
 
 WS 	: 	(' ') -> skip;
-NL : ('\n');
+NL : ('\n') -> skip;
 TAB : ('\t') -> skip;
+RET : ('\r') -> skip;
 
 STRING: '"'~('"')*'"';
 
@@ -49,9 +59,9 @@ CONTINUE: 'continue';
 ELSE: 'else';
 
 //COMENTARIOS
-COMMENT: '//'.+'/n' ->skip;
+COMMENT: (('//'~('\n')*'\n') | (('/*') ~('\n')* ('*/'))) ->skip;
 
-AF: [a-fA-F];
+//AF: [a-fA-F];
 COMA: ',';
 COLON: ':';
 SEMICOLON: ';';
@@ -59,14 +69,15 @@ BRACE: '{';
 BRACE2: '}';
 BRAKET: '[';
 BRAKET2: ']';
-PUNTOYCOMA: ';';
 PARENTESIS: '(';
 PARENTESIS2: ')';
 ENTEROS: ('0'..'9')+;
-ALPHA: ([a-zA-Z]);
 FLOTANTES: ('0'..'9')+'.'('0'..'9')+;
 HEX: '0x'([0-9a-fA-F]+);
+HEXDIGIT: ('0'..'9')[a-zA-Z];
 CHAR:  '\''.'\'';
 BOOLEANS: ('true'|'false');
-VARIABLES: [a-zA-Z]([a-zA-Z] | [0-9])*;
+ID: ([a-zA-Z]|('_')*) ([a-zA-Z] | [0-9] | '_')*;
+
+ErrorCharacter : . ;
 
