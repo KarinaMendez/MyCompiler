@@ -1,4 +1,4 @@
-// Generated from DecafScanner.g by ANTLR 4.4
+// Generated from scanner/DecafScanner.g by ANTLR 4.4
 
 	package compiler.scanner;
 
