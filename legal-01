@@ -1,1 +1,5 @@
-callout i;
+int a[4], b[8];
+boolean y;
+
+void main(int y){	
+}

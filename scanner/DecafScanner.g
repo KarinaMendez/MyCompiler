@@ -53,7 +53,7 @@ FOR: 'for';
 WHILE: 'while';
 RETURN: 'return';
 BREAK: 'break';
-VOID: 'void';
+VOD: 'void';
 CALLOUT: 'callout';
 CONTINUE: 'continue';
 ELSE: 'else';

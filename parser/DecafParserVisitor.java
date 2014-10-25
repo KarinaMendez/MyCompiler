@@ -106,13 +106,6 @@ public interface DecafParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExp2(@NotNull DecafParser.Exp2Context ctx);
 	/**
-	 * Visit a parse tree produced by the {@code while}
-	 * labeled alternative in {@link DecafParser#statement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitWhile(@NotNull DecafParser.WhileContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code exp1}
 	 * labeled alternative in {@link DecafParser#expr}.
 	 * @param ctx the parse tree
@@ -120,12 +113,25 @@ public interface DecafParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExp1(@NotNull DecafParser.Exp1Context ctx);
 	/**
+	 * Visit a parse tree produced by the {@code while}
+	 * labeled alternative in {@link DecafParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhile(@NotNull DecafParser.WhileContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code break}
 	 * labeled alternative in {@link DecafParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitBreak(@NotNull DecafParser.BreakContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DecafParser#cual}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCual(@NotNull DecafParser.CualContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code fieldDec1}
 	 * labeled alternative in {@link DecafParser#field_decl}.

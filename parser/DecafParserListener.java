@@ -168,18 +168,6 @@ public interface DecafParserListener extends ParseTreeListener {
 	 */
 	void exitExp2(@NotNull DecafParser.Exp2Context ctx);
 	/**
-	 * Enter a parse tree produced by the {@code while}
-	 * labeled alternative in {@link DecafParser#statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterWhile(@NotNull DecafParser.WhileContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code while}
-	 * labeled alternative in {@link DecafParser#statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitWhile(@NotNull DecafParser.WhileContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code exp1}
 	 * labeled alternative in {@link DecafParser#expr}.
 	 * @param ctx the parse tree
@@ -192,6 +180,18 @@ public interface DecafParserListener extends ParseTreeListener {
 	 */
 	void exitExp1(@NotNull DecafParser.Exp1Context ctx);
 	/**
+	 * Enter a parse tree produced by the {@code while}
+	 * labeled alternative in {@link DecafParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhile(@NotNull DecafParser.WhileContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code while}
+	 * labeled alternative in {@link DecafParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhile(@NotNull DecafParser.WhileContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code break}
 	 * labeled alternative in {@link DecafParser#statement}.
 	 * @param ctx the parse tree
@@ -203,6 +203,16 @@ public interface DecafParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBreak(@NotNull DecafParser.BreakContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DecafParser#cual}.
+	 * @param ctx the parse tree
+	 */
+	void enterCual(@NotNull DecafParser.CualContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DecafParser#cual}.
+	 * @param ctx the parse tree
+	 */
+	void exitCual(@NotNull DecafParser.CualContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code fieldDec1}
 	 * labeled alternative in {@link DecafParser#field_decl}.

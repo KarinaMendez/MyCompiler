@@ -25,7 +25,7 @@ public class Root extends Node{
 	}
 	
 	public void print(String padding){
-		System.out.println("root");
+		System.out.println("Root");
 		//if(n != null){
 			for(Node n : list){
 				if(n != null){
