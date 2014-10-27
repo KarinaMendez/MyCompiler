@@ -33,7 +33,7 @@ public class Literal extends Node{
 				
 				break;
 			default:
-				System.out.println(padding + type + " " + num);
+				System.out.print(num);
 				break;
 		}
 		// System.out.println(padding + left.print("") + " " + op + " " + right.print("") );

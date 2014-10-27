@@ -42,17 +42,24 @@ public class MethodDec extends Node{
 	public void print(String padding){
 		System.out.print(padding + "Method_Dec " + "\t");
 		if(no){
+
 			System.out.println(padding + type + " " + id + " ()");
 		}else if(yes){
+
 			System.out.print(padding + type + " " + id + " ()" );
 			block.print(padding + "\t");
 		}else if(both){
+
 			System.out.print(padding + type + " " + id + "( ");
 			for (int i = 0; i < types.size(); i++) {
-				System.out.println(padding + types.get(i) + " " + ids.get(i) + " ");
+
+				System.out.print(types.get(i) + " " + ids.get(i) + " ");
 			}
+
 			System.out.println(" )");
+			
 			block.print(padding + "\t");
+
 		}else if(noNode){
 			System.out.print(padding + type + " " + id + "( ");
 			for (int i = 0; i < types.size(); i++) {

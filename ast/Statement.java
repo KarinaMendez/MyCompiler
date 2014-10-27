@@ -20,9 +20,11 @@ public class Statement extends Node{
 
 	public void print(String padding){
 		if(loc1){
-			location.print(padding + "\t");
-			System.out.print(op + "\t");
-			exp.print(padding + "\t");
+			System.out.print(padding + "{ ");
+			location.print(" ");
+			System.out.print(op + " ");
+			exp.print(" ");
+			System.out.println(" }");
 		}else if(metCall){
 			System.out.print(padding + op);
 			call.print(padding + "\t");

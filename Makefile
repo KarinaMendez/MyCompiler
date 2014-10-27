@@ -1,7 +1,7 @@
 make: scanner/DecafScanner.java  scanner/Scanner.class parser/CC4Parser.java \
 	parser/CC4Parser.class Compiler.class ast/Ast.class ast/Node.class ast/Root.java \
 	ast/CalloutDec.java ast/Literal.java ast/Location.java ast/MethodDec.java \
-	ast/Statement.java codegen/Codegen.class \
+	ast/Statement.java ast/Block.java codegen/Codegen.class \
 	irt/Irt.class lib/ErrorHandler.class lib/Printer.class 
 
 
@@ -51,6 +51,9 @@ ast/MethodDec.class: ast/MethodDec.java
 
 ast/Statement.class: ast/Statement.java
 	javac ast/Statement.java
+
+ast/Block.class: ast/Block.java
+	javac ast/Block.java
 
 codegen/Codegen.class: codegen/Codegen.java
 	javac codegen/Codegen.java

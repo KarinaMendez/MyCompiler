@@ -62,9 +62,9 @@ statement: (location assign_op expr SEMICOLON) 																	    # locationSo
 //ready
 assign_op: (EQ | PLEQ | MIEQ){list.add("assign_op");}																# assign;
 
-
+//ready
 method_call: (ID PARENTESIS expr* (COMA expr)* PARENTESIS2) 														# methodC1
-	| (ID PARENTESIS ((callout_arg)* COMA) PARENTESIS2)/*){list.add("method_call");}*/								# methodC2;
+	| (ID PARENTESIS callout_arg* (COMA callout_arg)* PARENTESIS2)/*){list.add("method_call");}*/					# methodC2;
 
 //ready
 location: (ID | (ID PARENTESIS expr PARENTESIS2) | (ID BRAKET expr BRAKET2)){list.add("location");}					# locationParent;

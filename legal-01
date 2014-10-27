@@ -1,5 +1,6 @@
-int a[4], b[8];
+int a[4], b[8], a;
 boolean y;
 
 void main(int y){	
+	x = 5;
 }
