@@ -1,0 +1,64 @@
+
+stage: Scanning 
+INT
+ID
+BRAKET
+ENTEROS
+BRAKET2
+COMA
+ID
+BRAKET
+ENTEROS
+BRAKET2
+SEMICOLON
+ID
+BOO
+ID
+SEMICOLON
+VOD
+ID
+PARENTESIS
+INT
+ID
+COMA
+BOO
+ID
+PARENTESIS2
+BRACE
+IF
+PARENTESIS
+ID
+MAY
+ENTEROS
+PARENTESIS2
+BRACE
+ID
+EQ
+ENTEROS
+SEMICOLON
+BRACE2
+BRACE2
+
+stage: parsing 
+
+visited: decimal_literal
+visited: int_literal
+visited: decimal_literal
+visited: int_literal
+visited: location
+visited: rel_op
+visited: bin_op
+visited: decimal_literal
+visited: int_literal
+visited: literal
+visited: location
+visited: assign_op
+visited: decimal_literal
+visited: int_literal
+visited: literal
+visited: block
+visited: block
+visited: program
+
+Parse tree: 
+(program (field_decl int a [ (int_literal (decimal_literal 4)) ] , b [ (int_literal (decimal_literal 8)) ] ;) in (field_decl boolean x ;) (method_decl void main ( (cual int) y , (cual boolean) w ) (block { (statement if ( (expr (expleft (location x)) (bin_op (rel_op >)) (expr (literal (int_literal (decimal_literal 5))))) ) (block { (statement (location y) (assign_op =) (expr (literal (int_literal (decimal_literal 0)))) ;) })) })))

@@ -49,7 +49,8 @@ cual: (INT | BOO);
 block: BRACE (field_decl)* (statement)* BRACE2{list.add("block");}													# block1; 
 
 
-statement: (location assign_op expr SEMICOLON) 																	    # locationSon
+statement: 
+	(location assign_op expr SEMICOLON) 																	    	# locationSon
 	| (method_call SEMICOLON) 																						# methodCall
 	| (IF PARENTESIS expr PARENTESIS2 block (ELSE (block))?)														# if
 	| (FOR PARENTESIS* ID EQ expr COMA expr PARENTESIS2* block)  													# for
@@ -63,8 +64,9 @@ statement: (location assign_op expr SEMICOLON) 																	    # locationSo
 assign_op: (EQ | PLEQ | MIEQ){list.add("assign_op");}																# assign;
 
 //ready
-method_call: (ID PARENTESIS expr* (COMA expr)* PARENTESIS2) 														# methodC1
-	| (ID PARENTESIS callout_arg* (COMA callout_arg)* PARENTESIS2)/*){list.add("method_call");}*/					# methodC2;
+method_call: 
+	(ID PARENTESIS expr? (COMA expr)* PARENTESIS2) 																	# methodC1
+	| (ID PARENTESIS callout_arg? (COMA callout_arg)* PARENTESIS2)/*){list.add("method_call");}*/					# methodC2;
 
 //ready
 location: (ID | (ID PARENTESIS expr PARENTESIS2) | (ID BRAKET expr BRAKET2)){list.add("location");}					# locationParent;

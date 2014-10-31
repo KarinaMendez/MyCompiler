@@ -1,38 +1,57 @@
 package compiler.ast;
 
+import java.util.*;
+
 public class EXP extends Node{
 	/*
 		BinOp tiene una cantidad definida de nodos hijos
 		BinOp puede tener distintos signos
 	*/
-
+	public LinkedList<Node> nodes;
 	public String signo; 
 	public Node left;
-	public String op;
+	public Node op;
 	public Node right;
-	public boolean e1 = false, e2 = false, e3 = false;
+	public boolean e1 = false, e2 = false, e3 = false, e4 = false, e5 = false;
 
 
 	
-	public EXP(String op, Node left, Node right){
+	public EXP(Node left, String op, Node right){
 		
 		/*
 			incluir argumentos con el signo y los hijos
 		*/
 
 		this.left = left;
-		this.op = op;
+		this.signo = op;
 		this.right = right;
+		e3 = true;
 	}
 
-	public EXP(String op, Node right){
+	public EXP(String op, LinkedList<Node> nodes){
 		
 		/*
 			incluir argumentos con el signo y los hijos
 		*/
+		this.signo = op;
+		this.nodes = nodes;
+		e1 = true;
+	}
 
-		this.op = op;
-		this.right = right;
+	public EXP(Node exp){
+		this.left = exp;
+		e2 = true;
+	}
+
+	public EXP(String op, Node exp){
+		this.left = exp;
+		e4 = true;
+	}
+
+	public EXP(String op){
+		System.out.println("entro aqui");
+		this.signo = op;
+		e5 = true;
 	}
 	
 	public void print(String padding){
@@ -41,11 +60,21 @@ public class EXP extends Node{
 		*/
 			if(e1){
 				System.out.println(padding + op);
-				right.print(padding + "\t");
-			}else if(e2){
-				System.out.println(padding + op);
+				for (int i = 0; i<nodes.size(); i++) {
+					nodes.get(i).print(padding + "\t");	
+				}
+
+			}else if(e3){
+				System.out.println(padding + signo);
 				left.print(padding + "\t");
 				right.print(padding + "\t");
+			}else if(e2){
+				left.print(padding + "\t");
+			}else if(e4){
+				System.out.println(padding + op);
+				left.print(padding + "\t");
+			}else if(e5){
+				System.out.println(padding + signo + " ()");
 			}
 		// System.out.println(padding + left.print("") + " " + op + " " + right.print("") );
 	}

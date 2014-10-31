@@ -42,7 +42,7 @@ public class FieldDec extends Node{
 
 
 	public void print(String padding){
-		System.out.print(padding + "field_Dec " + "\t");
+		System.out.println(padding + "field_Dec " + "\t");
 		if(b){
 			System.out.println(padding + type + " ");
 			for (int i = 0; i < ids.size(); i++) {

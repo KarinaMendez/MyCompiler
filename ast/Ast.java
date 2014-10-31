@@ -188,8 +188,9 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 		}else if(ctx.STRING() != null){
 			str = ctx.STRING().getText();
 			return new CalloutDec(str);
+		}else{
+			return null;
 		}
-		return null;
 	}
 
 	/*-----------------------*/
@@ -265,8 +266,6 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 	/*-----------------------*/
 	//METHOD DECLARATIONS
 
-	//method_decl: (INT | BOO | VOD) ID PARENTESIS (cual ID  (COMA cual ID)*)* PARENTESIS2 block 
-
 	@Override
 	public Node visitMethodDec(DecafParser.MethodDecContext ctx){
 		TerminalNode type = null;
@@ -307,6 +306,8 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 		//DecafParser.BlockContext blockit = ctx.block();
 		//System.out.println(blockit);
 		Node blockit = visitBlock1((DecafParser.Block1Context)ctx.block());
+
+		System.out.println("ctx : " + ctx.block().getText());
 		
 		if((blockit == null) && conIDs){
 
@@ -342,14 +343,7 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 
 	/*-------------------------*/
 
-	//statement: (location assign_op expr SEMICOLON) 																	# locationSon
-	//| (method_call SEMICOLON) 																						# methodCall
-	//| (IF PARENTESIS expr PARENTESIS2 block (ELSE (block))*)														# if
-	//| (FOR PARENTESIS* ID EQ expr COMA expr PARENTESIS2* block)  													# for
-	//| (WHILE PARENTESIS expr PARENTESIS block) 																		# while 
-	//| (RETURN expr SEMICOLON) 																						# return
-	//| (BREAK SEMICOLON)																								# break
-	//| (CONTINUE SEMICOLON)
+	//STATEMENTS
 
 	@Override
 	public Node visitLocationSon(DecafParser.LocationSonContext ctx){
@@ -365,24 +359,62 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 
 	@Override
 	public Node visitMethodCall(DecafParser.MethodCallContext ctx){
-		System.out.println("method_call");
-		Node met = visit(ctx.method_call());
+		
+		DecafParser.Method_callContext aux = ctx.method_call();
+
+		Node met;
+
+		if (aux instanceof DecafParser.MethodC1Context){
+
+			met = visitMethodC1((DecafParser.MethodC1Context)aux);
+
+		}else if(aux instanceof DecafParser.MethodC2Context){
+			System.out.println("mc2");
+			met = visitMethodC2((DecafParser.MethodC2Context)aux);
+		}else{
+			System.out.println("not working instanceof");
+			met = null;
+		}
+
+		//System.out.println("aux:");
+		//aux.getText();
 
 		return new Statement("method_call" , met);
 	}
 
-	/*@Override
-	public Node visitIf(DecafParser.IfContext ctx){
-		TerminalNode iff = ctx.IF();
-		Node exp = visit(ctx.expr());
-		Node block = visit(ctx.block());
+	//| (IF PARENTESIS expr PARENTESIS2 block (ELSE (block))*)														# if
+	//| (FOR PARENTESIS* ID EQ expr COMA expr PARENTESIS2* block)  													# for
+	//| (WHILE PARENTESIS expr PARENTESIS block) 																		# while 
+	//| (RETURN expr SEMICOLON) 																						# return
+	//| (BREAK SEMICOLON)																								# break
+	//| (CONTINUE SEMICOLON)
 
-		List<TerminalNode> els = ctx.ELSE();
+
+	@Override
+	public Node visitIf(DecafParser.IfContext ctx){
+		System.out.println("visits if");
+		System.out.println(ctx.expr().getText());
+
+		Node ex = MyExp(ctx.expr());
+
+		//ex.print("dudeee: ");
+
+		TerminalNode iff = ctx.IF();
+		Node ifNode = null;
+		Node bl;
+
+		TerminalNode els = ctx.ELSE();
 		List<DecafParser.BlockContext> bloc = ctx.block();
 
-		//if((els.size() == 1) && (bloc.size() == 1)){
-		//	return new Statement()
-		//}
+		if((els != null) && (bloc.size() == 2)){
+			System.out.println("works with else");
+		}else if((els == null) && (bloc.size() == 1)){
+			//System.out.println("doesnt work with else");
+			bl = visitBlock1((DecafParser.Block1Context)bloc.get(0));
+			ifNode = new Statement(ex,bl);
+		}
+
+		return ifNode; 
 	}
 
 
@@ -392,40 +424,27 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 	public Node visitBlock1(DecafParser.Block1Context ctx){ 
 		List<DecafParser.StatementContext> sta = ctx.statement();
 		List<DecafParser.Field_declContext> fiel = ctx.field_decl();
-
-		//System.out.println("si entra a Block1");
+		Node ret = null;
 
 		if((fiel.size() == 0) && (sta.size() == 0)){
-			System.out.println("aqui entra");
-			//return null;
+			//System.out.println("aqui entra");
 		}else if((fiel.size() > 0) && (sta.size() == 0)){
-			System.out.println("entra a fiel");
-			
-
-
+			//System.out.println("entra a fiel");
 		}else if((fiel.size() == 0) && (sta.size() > 0)){
 			DecafParser.StatementContext aux;
-			//done statement: (location assign_op expr SEMICOLON) 																	# locationSon
-			//done | (method_call SEMICOLON) 																						# methodCall
-			//| (IF PARENTESIS expr PARENTESIS2 block (ELSE (block))*)															# if
-			//| (FOR PARENTESIS* ID EQ expr COMA expr PARENTESIS2* block)  														# for
-			//| (WHILE PARENTESIS expr PARENTESIS block) 																		# while 
-			//| (RETURN expr SEMICOLON) 																						# return
-			//| (BREAK SEMICOLON)																								# break
-			//| (CONTINUE SEMICOLON)																							# continue
+			//System.out.println("entra a statement");
 			
 
 			for (int i = 0; i < sta.size(); i++) {
 				aux = sta.get(i);
 				if(aux instanceof DecafParser.LocationSonContext){
-					return visitLocationSon((DecafParser.LocationSonContext)aux);
+					ret = visitLocationSon((DecafParser.LocationSonContext)aux);
 
 				}else if(aux instanceof DecafParser.MethodCallContext){
-					if(aux instanceof DecafParser.MethodC1Context){
-						return visitMethodC1((DecafParser.MethodC1Context)aux);
-					}else if(aux instanceof DecafParser.MethodC2Context){
-						return visitMethodC2((DecafParser.MethodC2Context)aux);
-					}
+					ret = visitMethodCall((DecafParser.MethodCallContext) aux);
+
+				}else if(aux instanceof DecafParser.IfContext){
+					ret = visitIf((DecafParser.IfContext) aux);
 				}
 			}
 
@@ -434,21 +453,14 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 		}else{
 			return null;
 		}
-		return null;
+		return ret;
 	}
 
 	/*-------------------------*/
-		//EXPRESIONES
-
-//expr: ((SUB | NO) expr)   																						# negativeExp1
-//	| (PARENTESIS expr PARENTESIS)																					# exp1															
-//	| (expleft bin_op expr)  																						# recursiveExp																						
-//	| literal  																										# literalExp1
-//	| location  																								    # locationExp1
-//	| method_call /*) {list.add("expr");}*/																			# methodCallExp1;																		
+		//EXPRESIONES																		
 
 	public Node MyExp(DecafParser.ExprContext aux){
-		Node x;
+		Node x = null;
 
 		if(aux instanceof DecafParser.NegativeExp1Context){
 			x = visitNegativeExp1((DecafParser.NegativeExp1Context)aux);
@@ -460,7 +472,7 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 			x = visitRecursiveExp((DecafParser.RecursiveExpContext)aux);
 				
 		}else if(aux instanceof DecafParser.LiteralExp1Context){
-			x = visitLiteralExp1((DecafParser.LiteralExp1Context));
+			x = visitLiteralExp1((DecafParser.LiteralExp1Context)aux);
 				
 		}else if(aux instanceof DecafParser.LocationExp1Context){
 			x = visitLocationExp1((DecafParser.LocationExp1Context)aux);
@@ -472,11 +484,34 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 		return x;
 	}
 
+	public Node MyExpLeft(DecafParser.ExpleftContext aux){
+		Node x = null;
+
+		if(aux instanceof DecafParser.NegativeExp2Context){
+			x = visitNegativeExp2((DecafParser.NegativeExp2Context)aux);
+
+		}else if(aux instanceof DecafParser.Exp2Context){
+			x = visitExp2((DecafParser.Exp2Context)aux);
+
+		}else if(aux instanceof DecafParser.LiteralExp2Context){
+			x = visitLiteralExp2((DecafParser.LiteralExp2Context)aux);
+				
+		}else if(aux instanceof DecafParser.LocationExp2Context){
+			x = visitLocationExp2((DecafParser.LocationExp2Context)aux);
+				
+		}else if(aux instanceof DecafParser.MethodCallExp2Context){
+			x = visitMethodCallExp2((DecafParser.MethodCallExp2Context)aux);
+		}
+
+		return x;
+	}
+
+
 	@Override
 	public Node visitNegativeExp1(DecafParser.NegativeExp1Context ctx){
 		TerminalNode op = ctx.SUB() == null ? ctx.NO() : ctx.SUB();
 		Node ep = MyExp(ctx.expr());
-		return new EXP(op, ep);
+		return new EXP(op.getText(), ep);
 	}
 
 	@Override
@@ -487,9 +522,19 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 
 	@Override
 	public Node visitRecursiveExp(DecafParser.RecursiveExpContext ctx){
-		Node ep = visitEx(ctx.expr());
-		//toca ExpLeft
-		return new EXP(ep);
+		System.out.println("entra a recursive");
+		System.out.println("op: " + ctx.bin_op().getText());
+
+		//Node op = visitBinOp((DecafParser.BinOpContext)ctx.bin_op());
+
+		String op = ctx.bin_op().getText();
+
+		DecafParser.ExpleftContext x = ctx.expleft();
+		DecafParser.ExprContext y = ctx.expr();
+
+		Node left = MyExpLeft(x), right = MyExp(y);
+
+		return new EXP(left, op, right);
 	}
 
 	@Override
@@ -497,39 +542,95 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 		return visitLit((DecafParser.LitContext) ctx.literal());
 	}
 
+	@Override
+	public Node visitLocationExp1(DecafParser.LocationExp1Context ctx){
+		DecafParser.LocationContext aux = ctx.location();
+		return visitLocationParent((DecafParser.LocationParentContext)aux);
+	}
+
+	@Override
+	public Node visitMethodCallExp1(DecafParser.MethodCallExp1Context ctx){
+		DecafParser.Method_callContext aux = ctx.method_call();
+
+		if (aux instanceof DecafParser.MethodC1Context){
+			return visitMethodC1((DecafParser.MethodC1Context)aux);
+
+		}else if(aux instanceof DecafParser.MethodC2Context){
+			return visitMethodC2((DecafParser.MethodC2Context)aux);
+		}else{
+			return null;
+		}
+
+	}
+
+	//------LeftRecursive
+
+	@Override
+	public Node visitLocationExp2(DecafParser.LocationExp2Context ctx){
+		DecafParser.LocationContext aux = ctx.location();
+		return visitLocationParent((DecafParser.LocationParentContext)aux);
+	}
+
+	@Override
+	public Node visitMethodCallExp2(DecafParser.MethodCallExp2Context ctx){
+		DecafParser.Method_callContext aux = ctx.method_call();
+
+		if (aux instanceof DecafParser.MethodC1Context){
+			return visitMethodC1((DecafParser.MethodC1Context)aux);
+
+		}else if(aux instanceof DecafParser.MethodC2Context){
+			return visitMethodC2((DecafParser.MethodC2Context)aux);
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public Node visitLiteralExp2(DecafParser.LiteralExp2Context ctx){
+		return visitLit((DecafParser.LitContext) ctx.literal());
+	}
+
+	@Override
+	public Node visitNegativeExp2(DecafParser.NegativeExp2Context ctx){
+		TerminalNode op = ctx.SUB() == null ? ctx.NO() : ctx.SUB();
+		Node ep = MyExp(ctx.expr());
+		return new EXP(op.getText(), ep);
+	}
+
+	@Override
+	public Node visitExp2(DecafParser.Exp2Context ctx){
+		Node ep = MyExp(ctx.expr());
+		return new EXP(ep);
+	}
+
+
 	/*-------------------------*/
-	
+	//METHOD CALL
+
 	@Override
 	public Node visitMethodC1(DecafParser.MethodC1Context ctx){
 		TerminalNode id = ctx.ID();
+
 		List<DecafParser.ExprContext> expresiones = ctx.expr();
-		List<DecafParser.Callout_argContext> callouts = ctx.callout_arg();
-		DecafParser.ExprContext aux;
+		DecafParser.ExprContext ep;
+		LinkedList<Node> exprs = new LinkedList<Node>();
+		Node expr = null;
 
 		if(expresiones.size() > 0){
 			//verifica el parent de cada elemento para visitar nodos ya creados 
-			for (int i = 0; i<expresiones.size; i++) {
-				aux = expresiones.get(i);
-				if(aux instanceof DecafParser.NegativeExp1Context){
-					visitNegativeExp1((DecafParser.NegativeExp1Context)aux);
 
-				}else if(aux instanceof DecafParser.Exp1Context){
-					visitExp1((DecafParser.Exp1Context)aux);
-
-				}else if(aux instanceof DecafParser.RecursiveExpContext){
-					visitRecursiveExp((DecafParser.RecursiveExpContext)aux);
-				
-				}else if(aux instanceof DecafParser.LiteralExp1Context){
-					visitLiteralExp1((DecafParser.LiteralExp1Context));
-				
-				}else if(aux instanceof DecafParser.LocationExp1Context){
-					visitLocationExp1((DecafParser.LocationExp1Context)aux);
-				
-				}else if(aux instanceof DecafParser.MethodCallExp1Context){
-					visitMethodCallExp1((DecafParser.MethodCallExp1Context)aux);
-				}
+			for (int i = 0; i<expresiones.size(); i++) {
+				ep = expresiones.get(i);
+				expr = MyExp(ep);
+				exprs.add(expr);
 			}
+			expr = new EXP(id.getText(), exprs);
+
+		}else if((expresiones.size() == 0) || (expresiones == null)){
+			expr = new EXP(id.getText());
 		}
+
+		return expr;
 	}
 
 	@Override
@@ -537,15 +638,21 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 		//verifica el parent de cada elemento para visitar nodos ya creados 
 		TerminalNode id = ctx.ID();
 		List<DecafParser.Callout_argContext> callouts = ctx.callout_arg();
-		DecafParser.ExprContext aux;
+		DecafParser.Callout_argContext aux;
+		LinkedList<Node> calls = new LinkedList<Node>();
+		Node expr = null;
+
 		if(callouts.size() > 0){
+			//verifica el parent de cada elemento para visitar nodos ya creados 
 			for (int i = 0; i<callouts.size(); i++) {
 				aux = callouts.get(i);
 				if(aux instanceof DecafParser.CalloutArgContext){
-					visitCalloutArg((DecafParser.CalloutArgContext)aux)
+					expr = visitCalloutArg((DecafParser.CalloutArgContext)aux);
+					calls.add(expr);
 				}
 			}
 		}
+		return new EXP(id.getText(), calls);
 	}
 
 	/*-------------------------*/

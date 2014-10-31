@@ -40,7 +40,7 @@ public class MethodDec extends Node{
 	}
 
 	public void print(String padding){
-		System.out.print(padding + "Method_Dec " + "\t");
+		System.out.println(padding + "Method_Dec " + "\t");
 		if(no){
 
 			System.out.println(padding + type + " " + id + " ()");
