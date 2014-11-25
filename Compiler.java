@@ -192,7 +192,37 @@ public class Compiler{ //extends DecafParserBaseListener{
 								    		ErrorHandler error = new ErrorHandler("not existing file");
 										}
 										Printer outse = new Printer(fileout, "flag");
-										Semantic ss = new Semantic(outse,filename);
+
+
+										/*	se encarga de crear las herramientas necesarias para crear la tabla de simbolos
+										obtenerla y luego imprimirla	*/
+
+										//try{
+											DecafScanner scannerAst = new DecafScanner(new ANTLRFileStream(filename));
+											DecafParser parserAst = new DecafParser(new CommonTokenStream(scannerAst));
+
+											ParseTree t = parserAst.start();
+
+											Ast visitorAst = new Ast(outse,filename);
+											Root rootAst = (Root)visitorAst.visit(t);
+
+											//Tree t = (Tree)r.getTree();
+											//System.out.println("got here");
+											//rootAst.print();
+											Semantic sAst = new Semantic();
+											String result = sAst.check(rootAst)? " valido" : " invalido";
+											System.out.println("El programa es" + result);
+											System.out.println(sAst.getTable());
+
+										/*}catch (ArrayIndexOutOfBoundsException aiobe) {
+										    System.err.println("usage: java Main <file>\nwhere file is the path to the filename with the tokens");
+										    System.exit(1);
+										} catch (Exception e) {
+										    System.err.println("usage: java Main <file>\nwhere file is the path to the filename with the tokens");
+										    System.exit(1);
+										} */
+
+
 										break;
 									case "irt":
 										try{

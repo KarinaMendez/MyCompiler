@@ -11,10 +11,13 @@ import compiler.parser.CC4Parser;
 
 public class Ast extends DecafParserBaseVisitor<Node>{
 	CC4Parser c;
+	TerminalNode operation;
+
 	public Ast(Printer out,String filename)throws Exception{
 		this.c = new CC4Parser(out,filename);
 		out.print("stage: CC4Parser \n");
 	}
+
 
 	@Override
 	public Node visitProgram(DecafParser.ProgramContext ctx){
@@ -113,30 +116,29 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 
 	@Override 
 	public Node visitCondOp(DecafParser.CondOpContext ctx){
-		TerminalNode op = ctx.ANDD() == null ? ctx.ORR() : ctx.ANDD();
+		operation = ctx.ANDD() == null ? ctx.ORR() : ctx.ANDD();
 		return null;
 	}
 
 	@Override
 	public Node visitEqOp(DecafParser.EqOpContext ctx){
-		TerminalNode op = ctx.EQQ() == null ? ctx.NOEQ() : ctx.EQQ();
+		operation = ctx.EQQ() == null ? ctx.NOEQ() : ctx.EQQ();
 		return null;
 	}
 
 	@Override
 	public Node visitRelOp(DecafParser.RelOpContext ctx){
-		TerminalNode op;
 		if((ctx.MEN() == null) && (ctx.MAY() == null) && (ctx.MEEQ() == null)){
-			op = ctx.MAEQ();
+			operation = ctx.MAEQ();
 
 		}else if((ctx.MEN() == null) && (ctx.MAY() == null) && (ctx.MAEQ() == null)){
-			op = ctx.MEEQ();
+			operation = ctx.MEEQ();
 
 		}else if((ctx.MAY() == null) && (ctx.MEEQ() == null) && (ctx.MAEQ() == null)){
-			op = ctx.MEN();
+			operation = ctx.MEN();
 
 		}else if((ctx.MEN() == null) && (ctx.MAEQ() == null) && (ctx.MEEQ() == null)){
-			op = ctx.MAY();
+			operation = ctx.MAY();
 		}
 
 		return null;
@@ -392,8 +394,8 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 
 	@Override
 	public Node visitIf(DecafParser.IfContext ctx){
-		System.out.println("visits if");
-		System.out.println(ctx.expr().getText());
+		//System.out.println("visits if");
+		//System.out.println(ctx.expr().getText());
 
 		Node ex = MyExp(ctx.expr());
 
@@ -417,6 +419,29 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 		return ifNode; 
 	}
 
+
+	@Override
+	public Node visitFor(DecafParser.ForContext ctx){
+		Node forNode = null;
+		Node bl;
+		TerminalNode forr = ctx.FOR();
+		TerminalNode id = ctx.ID();
+		TerminalNode eq = ctx.EQ();
+		List<DecafParser.ExprContext> exprs= ctx.expr();
+		LinkedList<Node> exprN = new LinkedList<Node>();
+
+		for (int i = 0; i < exprs.size() ; i++) {
+			exprN.add(MyExp(exprs.get(i)));
+		}
+
+		DecafParser.BlockContext bloc = ctx.block();
+
+		if(bloc != null){
+			bl = visitBlock1((DecafParser.Block1Context)bloc);
+			forNode = new Statement(id.getText(), exprN, bl);
+		}
+		return forNode;
+	}
 
 	/*-------------------------*/
 
@@ -520,10 +545,12 @@ public class Ast extends DecafParserBaseVisitor<Node>{
 		return new EXP(ep);
 	}
 
+
+	//nodo que visita las expresiones recursivas por la izquierda
 	@Override
 	public Node visitRecursiveExp(DecafParser.RecursiveExpContext ctx){
-		System.out.println("entra a recursive");
-		System.out.println("op: " + ctx.bin_op().getText());
+		//System.out.println("entra a recursive");
+		//System.out.println("op: " + ctx.bin_op().getText());
 
 		//Node op = visitBinOp((DecafParser.BinOpContext)ctx.bin_op());
 

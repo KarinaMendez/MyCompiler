@@ -46,8 +46,24 @@ public class Root extends Node{
 		*/
 	}
 	
+	public Node getChild(int i){
+		return list.get(i);
+	}
+
+	public LinkedList<Node> getChildren() {
+		return list;
+	}
+
+	public int getChildCount() {
+		return list.size();
+	}
+
+	public LinkedList<Node> getList(){
+		return this.list;
+	}
+	
 	public void print(){
-		print("");
+		print(" ");
 	}
 } 
  

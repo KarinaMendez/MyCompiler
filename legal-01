@@ -1,9 +1,6 @@
-int a[4], b[8];
-in
-boolean x;
-
-void main(int y, boolean w){	
-	if(x > 5){
-		y = 0;
+int a, a;
+void main(int y, boolean w){
+	for (x = 0, x+1){
+		y = 1;
 	}
 }

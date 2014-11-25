@@ -1,6 +1,7 @@
 package compiler.ast;
 
 import java.util.*;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class EXP extends Node{
 	/*
@@ -11,19 +12,20 @@ public class EXP extends Node{
 	public String signo; 
 	public Node left;
 	public Node op;
+	public TerminalNode operation;
 	public Node right;
 	public boolean e1 = false, e2 = false, e3 = false, e4 = false, e5 = false;
 
 
 	
-	public EXP(Node left, String op, Node right){
+	public EXP(Node left, String ope, Node right){
 		
 		/*
 			incluir argumentos con el signo y los hijos
 		*/
 
 		this.left = left;
-		this.signo = op;
+		this.signo = ope;
 		this.right = right;
 		e3 = true;
 	}
@@ -65,14 +67,19 @@ public class EXP extends Node{
 				}
 
 			}else if(e3){
-				System.out.println(padding + signo);
+
 				left.print(padding + "\t");
+				System.out.print(padding + signo + "\t");
 				right.print(padding + "\t");
+				System.out.print("\t");
+
 			}else if(e2){
 				left.print(padding + "\t");
+
 			}else if(e4){
 				System.out.println(padding + op);
 				left.print(padding + "\t");
+
 			}else if(e5){
 				System.out.println(padding + signo + " ()");
 			}

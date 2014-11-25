@@ -12,5 +12,13 @@ Cuando intentábamos hacer make en la carpeta compiler, daba el error: “Makefi
 
 
 
+AST
+
+
+SEMANTIC
+
+
+
+
 
 

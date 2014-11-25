@@ -2,17 +2,7 @@
 stage: Scanning 
 INT
 ID
-BRAKET
-ENTEROS
-BRAKET2
 COMA
-ID
-BRAKET
-ENTEROS
-BRAKET2
-SEMICOLON
-ID
-BOO
 ID
 SEMICOLON
 VOD
@@ -25,10 +15,14 @@ BOO
 ID
 PARENTESIS2
 BRACE
-IF
+FOR
 PARENTESIS
 ID
-MAY
+EQ
+ENTEROS
+COMA
+ID
+PLUS
 ENTEROS
 PARENTESIS2
 BRACE
@@ -43,10 +37,9 @@ stage: parsing
 
 visited: decimal_literal
 visited: int_literal
-visited: decimal_literal
-visited: int_literal
+visited: literal
 visited: location
-visited: rel_op
+visited: arith_op
 visited: bin_op
 visited: decimal_literal
 visited: int_literal
@@ -61,4 +54,4 @@ visited: block
 visited: program
 
 Parse tree: 
-(program (field_decl int a [ (int_literal (decimal_literal 4)) ] , b [ (int_literal (decimal_literal 8)) ] ;) in (field_decl boolean x ;) (method_decl void main ( (cual int) y , (cual boolean) w ) (block { (statement if ( (expr (expleft (location x)) (bin_op (rel_op >)) (expr (literal (int_literal (decimal_literal 5))))) ) (block { (statement (location y) (assign_op =) (expr (literal (int_literal (decimal_literal 0)))) ;) })) })))
+(program (field_decl int a , a ;) (method_decl void main ( (cual int) y , (cual boolean) w ) (block { (statement for ( x = (expr (literal (int_literal (decimal_literal 0)))) , (expr (expleft (location x)) (bin_op (arith_op (add_sub +))) (expr (literal (int_literal (decimal_literal 1))))) ) (block { (statement (location y) (assign_op =) (expr (literal (int_literal (decimal_literal 1)))) ;) })) })))

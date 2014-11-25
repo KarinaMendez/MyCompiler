@@ -44,6 +44,7 @@ public class MethodDec extends Node{
 		if(no){
 
 			System.out.println(padding + type + " " + id + " ()");
+			
 		}else if(yes){
 
 			System.out.print(padding + type + " " + id + " ()" );

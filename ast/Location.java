@@ -22,7 +22,11 @@ public class Location extends Node{
 			System.out.print(s + " ");
 			exp.print("\t");
 		}else if(ss){
-			System.out.print(s);
+			System.out.print(s + " ");
 		}
+	}
+
+	public String getId(){
+		return s;
 	}
 }

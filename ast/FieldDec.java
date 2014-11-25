@@ -61,4 +61,12 @@ public class FieldDec extends Node{
 			System.out.println(padding + type + " " + id + " " + "[" + literal + "]");
 		}
 	}
+
+	public String getType(){
+		return type;
+	}
+
+	public LinkedList<String> getIds(){
+		return ids;
+	}
 }

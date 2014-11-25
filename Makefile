@@ -2,7 +2,7 @@ make: scanner/DecafScanner.java  scanner/Scanner.class parser/CC4Parser.java \
 	parser/CC4Parser.class Compiler.class ast/Ast.class ast/Node.class ast/Root.java \
 	ast/CalloutDec.java ast/Literal.java ast/Location.java ast/MethodDec.java \
 	ast/Statement.java ast/Block.java codegen/Codegen.class ast/EXP.java \
-	irt/Irt.class lib/ErrorHandler.class lib/Printer.class 
+	irt/Irt.class lib/ErrorHandler.class lib/Printer.class semantic/Semantic.java
 
 
 
@@ -19,7 +19,7 @@ parser/CC4Parser.class: parser/CC4Parser.java
 	javac parser/CC4Parser.java
 
 parser/CC4Parser.java: parser/DecafParser.g
-	java org.antlr.v4.Tool -lib scanner -visitor parser/DecafParser.g	
+	java org.antlr.v4.Tool -lib scanner -visitor parser/DecafParser.g
 
 scanner/Scanner.class: scanner/Scanner.java
 	javac scanner/Scanner.java
@@ -58,6 +58,9 @@ ast/Block.class: ast/Block.java
 ast/EXP.class: ast/EXP.java
 	javac ast/EXP.java
 
+semantic/Semantic.class: semantic/Semantic.java
+	javac semantic/Semantic.java
+
 codegen/Codegen.class: codegen/Codegen.java
 	javac codegen/Codegen.java
 
@@ -73,6 +76,7 @@ clean:
 	rm parser/*.class
 	rm parser/*.tokens
 	rm ast/*.class
+	rm semantic/*.class
 	rm codegen/*.class
 	rm irt/*.class
 	rm lib/*.class

@@ -15,6 +15,8 @@ public class Block extends Node{
 
 	public void print(String padding){
 		if(b1) {
+			//System.out.println("printing this");
+
 			System.out.println(padding + "{" + location + " " + op + " " + exp + "}");
 		}
 	}
